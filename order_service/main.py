@@ -1,4 +1,9 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+
+class Order(BaseModel):
+    product: str
+    quantity: int
 
 app = FastAPI()
 
@@ -9,8 +14,8 @@ def order():
     }
 
 @app.post("/orders")
-def create_order():
+def create_order(order: Order):
     return {
-        "order_id": 101,
-        "status": "created"
+        "product": order.product,
+        "quantity": order.quantity,
     }

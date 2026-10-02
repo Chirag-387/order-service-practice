@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 import httpx
 from httpx import HTTPStatusError, RequestError
+from pydantic import BaseModel
+
+class Order(BaseModel):
+    product: str
+    quantity: int
 
 app = FastAPI()
 
@@ -11,9 +16,13 @@ def check():
     }
 
 @app.post("/test-order")
-def test_order():
+def test_order(order: Order):
     try:
-        response = httpx.post("http://127.0.0.1:8001/orders")
+        response = httpx.post("http://127.0.0.1:8001/orders",
+        json = {
+            "product": order.product,
+            "quantity": order.quantity
+        })
         response.raise_for_status()
         return response.json()
     except HTTPStatusError:
